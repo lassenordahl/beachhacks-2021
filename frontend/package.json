@@ -14,9 +14,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run copy",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "copy": "rm -rf ../api/templates && mkdir ../api/templates && cp -av ./build/. ../api/templates"
   },
   "eslintConfig": {
     "extends": "react-app"
