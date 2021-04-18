@@ -8,62 +8,48 @@ function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-function Sequence() {
+let colAmount = 20;
 
-  const [ sequenceData, setSequenceData ] = useState(null);
+function Sequence() {
+  const [sequenceData, setSequenceData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   let query = useQuery();
 
   useEffect(() => {
     if (query.get("name") !== null) {
-      loadSequenceData(query.get("name"))
+      loadSequenceData(query.get("name"));
     }
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [sequenceData])
 
   function loadSequenceData() {
     setSequenceData({
-      "sequence_data": [
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ]
+      sequence_data: [
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0],
       ],
-      "assignments": {
-        "bernie": 0
-      }
+      assignments: {
+        bernie: 0,
+      },
     });
   }
 
-
   return (
     <div className="sequence">
-      <Sequencer cols={12}/>
+      {!loading ? (
+        <>
+          {" "}
+          <Sequencer cols={colAmount} disabled={false} />
+          <Sequencer cols={colAmount} disabled={true} />
+        </>
+      ) : (
+        <p>Loading data</p>
+      )}
     </div>
   );
 }

@@ -1,7 +1,6 @@
 @import "../../../globals/hack-variables.scss";
 
 .landing {
-
   width: 100%;
   height: 100%;
   color: white;
@@ -16,6 +15,8 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
+    background-color: $background-light;
+    padding: 5rem;
 
     h1 {
       font-weight: 400;
@@ -30,6 +31,48 @@
       font-weight: 400;
       margin-bottom: 2rem;
     }
+
+    .landing__input_wrapper {
+      display: flex;
+      flex-direction: row;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .input-container {
+        position: relative;
+        margin-right: 78px;
+      }
+      .input-container label {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        font-size: 16px;
+        color: #fff;
+        pointer-event: none;
+        transition: all 0.5s ease-in-out;
+      }
+      .input-container input {
+        border: 0;
+        border-bottom: 1px solid #555;
+        background: transparent;
+        width: 100%;
+        padding: 8px 0 5px 0;
+        font-size: 16px;
+        color: #fff;
+      }
+      .input-container input:focus {
+        border: none;
+        outline: none;
+        border-bottom: 1px solid #e74c3c;
+      }
+
+      .input-container input:focus ~ label,
+      .input-container input:valid ~ label {
+        top: -12px;
+        font-size: 12px;
+      }
+    }
   }
-  
 }

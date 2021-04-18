@@ -30,7 +30,8 @@ const NoteButton = ({ note, isActive, ...rest }) => {
   );
 };
 
-export default function Sequencer({sampler=default_sampler, cols=8}) {
+function Sequencer({ sampler=default_sampler, cols=8, disabled=false }) {
+
   const [grid, setGrid] = useState(GenerateGrid(cols));
   const [isPlaying, setIsPlaying] = useState(false);
   const noteIndex = ["C", "D", "E", "G", "A"];
@@ -104,7 +105,7 @@ export default function Sequencer({sampler=default_sampler, cols=8}) {
     setGrid(copy);
   }
   return (
-    <div className="sequencer">
+    <div className={`sequencer ${disabled ? "sequencer_disabled": ""}`}>
       {grid.map((col, rowIndex) => (
         <div className="note-column">
           {col.map((isActive, colIndex) => (
@@ -118,3 +119,5 @@ export default function Sequencer({sampler=default_sampler, cols=8}) {
     </div>
   );
 }
+
+export default Sequencer;

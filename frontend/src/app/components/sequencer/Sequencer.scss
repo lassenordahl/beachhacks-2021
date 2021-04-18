@@ -2,6 +2,9 @@
 
 .sequencer {
   
+  .note--active {
+    background-color: $highlight;
+  }
 
   .sequencer__note_block {
     width: 36px;
@@ -9,5 +12,14 @@
     margin: 6px;
     outline: 0;
     border: 0;
+  }
+}
+
+.sequencer_disabled {
+  transform: scale(0.5);
+
+  .sequencer__note_block {
+    cursor: default;
+    pointer-events: none;
   }
 }

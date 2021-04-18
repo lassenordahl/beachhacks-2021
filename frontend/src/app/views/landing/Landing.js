@@ -16,7 +16,7 @@ function Landing() {
   }
 
   function handleButtonAction() {
-    if (showNameInput) {
+    if (showNameInput && name !== null) {
       loadApp();
     } else {
       setNameInput(true);
@@ -38,14 +38,21 @@ function Landing() {
           Crowd<span>Sequence</span>
         </h1>
         <p>Create music with your friends, family, and other hackers!</p>
+        <div className="landing__input_wrapper">
         {showNameInput ? (
-          <input
-            placeholder="Enter your name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          ></input>
+
+          <div class="input-container">		
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            ></input>
+            <label>Name</label>
+          </div>
+          
         ) : null}
         <Button className="button-wide" onClick={() => handleButtonAction()}>{showButtonText()}</Button>
+        </div>
+        
       </div>
     </div>
   );
