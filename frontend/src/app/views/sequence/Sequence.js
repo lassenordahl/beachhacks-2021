@@ -100,9 +100,9 @@ function Sequence() {
         tracks.map((music, trackIndex) => {
           if(trackIndex === 2) {
             // if(music[column].length > 0)
-              music[column].map((note) => {
-                samplers[trackIndex].player(note).start(time, 0,"8n");
-              })
+            music[column].map((note) => {
+              samplers[trackIndex].player(note).start(time, 0,"8n");
+            })
           } else {
             samplers[trackIndex].triggerAttackRelease(music[column], "8n", time);
           }
@@ -198,9 +198,16 @@ function Sequence() {
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
+            // return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
 
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={sequenceData.assignments[name] !== index} key={index} updateGrid={updateGrid}/>;
+            return <Sequencer 
+              cols={colAmount} 
+              inputGrid={data} 
+              disabled={sequenceData.assignments[name] !== index} 
+              key={index} 
+              updateGrid={updateGrid}
+              currentCol={currentCol} 
+            />;
           })}
         </>
       ) : (
