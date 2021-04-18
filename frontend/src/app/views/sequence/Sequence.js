@@ -15,6 +15,7 @@ function Sequence() {
   const [loading, setLoading] = useState(true);
 
   let query = useQuery();
+  let name = query.get("name");
 
   useEffect(() => {
     if (query.get("name") !== null) {
@@ -24,15 +25,11 @@ function Sequence() {
 
   useEffect(() => {
     setLoading(false);
-  }, [sequenceData])
+  }, [sequenceData]);
 
   function loadSequenceData() {
     setSequenceData({
-      sequence_data: [
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0],
-      ],
+      sequence_data: [[[]], [[]], [[]]],
       assignments: {
         bernie: 0,
       },
@@ -41,11 +38,12 @@ function Sequence() {
 
   return (
     <div className="sequence">
-      {!loading ? (
+      {!loading && sequenceData != null ? (
         <>
           {" "}
-          <Sequencer cols={colAmount} disabled={false} />
-          <Sequencer cols={colAmount} disabled={true} />
+          {sequenceData.sequence_data.map(function (data, index) {
+            return <Sequencer cols={colAmount} disabled={sequenceData.assignments[name] !== index} key={index} />;
+          })}
         </>
       ) : (
         <p>Loading data</p>
