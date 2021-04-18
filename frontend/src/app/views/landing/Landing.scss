@@ -17,6 +17,8 @@
     justify-content: center;
     background-color: $background-light;
     padding: 5rem;
+    z-index: 101;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
     h1 {
       font-weight: 400;
@@ -75,4 +77,48 @@
       }
     }
   }
+}
+
+.landing::before {
+  /* border-radius: 83% 55% 43% 40% / 40% 70% 75% 76%; */
+  background: #4CD9FF;
+  content: "";
+  width: 45vmax;
+  height: 35vmax;
+  position: absolute;
+  /* background: rgba(255, 255, 255, 0.07); */
+  left: 12vmin;
+  top: 30vmin;
+  animation: morph-smaller 15s linear infinite alternate;
+  z-index: 100;
+  will-change: border-radius, transform;
+  transform-origin: 55% 55%;
+  pointer-events: none;
+}
+
+.landing::after {
+  /* border-radius: 83% 55% 43% 40% / 40% 70% 75% 76%; */
+  background: #ff7668;
+  content: "";
+  width: 70vmax;
+  height: 55vmax;
+  position: absolute;
+  /* background: rgba(255, 255, 255, 0.07); */
+  left: -20vmin;
+  top: -20vmin;
+  animation: morph 10s linear infinite alternate;
+  z-index: 1;
+  will-change: border-radius, transform;
+  transform-origin: 55% 55%;
+  pointer-events: none;
+}
+
+@keyframes morph {
+  0% {border-radius: 40% 60% 60% 40% / 70% 30% 70% 30%;}
+  100% {border-radius: 40% 60%;}
+}
+
+@keyframes morph-smaller {
+  0% {border-radius: 63% 37% 44% 56% / 23% 53% 47% 77%; }
+  100% {border-radius: 69% 31% 25% 75% / 71% 22% 78% 29% ;}
 }
