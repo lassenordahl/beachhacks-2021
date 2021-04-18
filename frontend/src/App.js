@@ -2,6 +2,7 @@
 import React from "react";
 import "./App.scss";
 import "globals/hack-styles.scss";
+import Sequencer from "./app/components/Sequencer.js";
 
 // Installed dependency imports
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
@@ -49,7 +50,7 @@ function App() {
         <Switch>
           <Route 
             exact path={"/"}
-            component={SampleCard}
+            component={Sequencer}
           />
           <Route 
             exact path={"/other"}
