@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="api/templates")
 
 FILE_NAME = "data.json"
 INSTRUMENTS = [0, 1, 2]
-STEPS = 8
+STEPS = 20
 
 
 def startup_data_structures():
