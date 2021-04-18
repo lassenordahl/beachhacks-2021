@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+pytest
+requests
+python-dotenv
+uvloop
+gunicorn==19.3.0
+httptools
