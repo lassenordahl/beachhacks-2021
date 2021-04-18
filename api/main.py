@@ -79,6 +79,17 @@ def sequence(payload: dict = Body(...)):
             data = json.dump(payload, f)
     return data
 
+@app.post("/update-sequence/{name}")
+def sequence(name: str, payload: list = Body(...)):
+    with open(FILE_NAME, "r+") as f:
+        data = json.load(f)
+        f.seek(0)
+        instrument = data["assignments"][name]
+        data["sequence_data"][instrument] = payload
+        json.dump(data, f)
+        f.truncate()
+        return data
+
 @app.post("/leave/{name}")
 def leave(name: str):
     with open(FILE_NAME, "r+") as f:

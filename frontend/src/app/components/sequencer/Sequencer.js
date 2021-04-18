@@ -37,7 +37,6 @@ function Sequencer({
   updateGrid
 }) {
   const [grid, setGrid] = useState(inputGrid);
-  const [isPlaying, setIsPlaying] = useState(false);
   const noteIndex = ["C", "D", "E", "G", "A"];
   const CHOSEN_OCTAVE = 1;
 
