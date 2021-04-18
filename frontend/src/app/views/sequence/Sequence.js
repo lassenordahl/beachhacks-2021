@@ -35,10 +35,10 @@ const sampler2 = new Tone.Sampler({
 
 const sampler3 = new Tone.Players({
   urls: {
-    'C1':hihatFile1,
-    'D1':hihatFile2,
-    'E1':kickFile,
-    'G1':snareFile,
+    'C1': hihatFile1,
+    'D1': hihatFile2,
+    'E1': kickFile,
+    'G1': snareFile,
     'A1': shakerFile
   },
   baseUrl: "",

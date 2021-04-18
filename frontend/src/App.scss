@@ -26,9 +26,25 @@
 .note-column--active {
   border: 5px solid #ccc;
   border-radius: 10px;
+
+  .note--active {
+    animation: popout 1s ease;
+    -webkit-animation: popout 1s ease;
+    box-shadow: 0 0px 10px 10px rgba(255, 255, 255, 0.7), 0px 10px 10px rgba(255, 255, 255, 0.7);
+  }
+  @keyframes popout {
+      from{transform:scale(1)}
+      80%{transform:scale(1.5)}
+      to{transform:scale(1)}
+  }
+  @-webkit-keyframes popout {
+      from{-webkit-transform:scale(1)}
+      80%{-webkit-transform:scale(1.5)}
+      to{-webkit-transform:scale(1)}
+  }
 }
 
-.note:active {
+.note-column:active {
   border: 0px;
 }
 
