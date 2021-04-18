@@ -29,11 +29,19 @@ function Sequence() {
 
   function loadSequenceData() {
     setSequenceData({
-      sequence_data: [[[]], [[]], [[]]],
+      sequence_data: [
+        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)), 
+        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)), 
+        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false))
+      ],
       assignments: {
         bernie: 0,
       },
     });
+  }
+
+  function updateTotalSequence() {
+    setSequenceData();
   }
 
   return (
@@ -42,7 +50,7 @@ function Sequence() {
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            return <Sequencer cols={colAmount} disabled={sequenceData.assignments[name] !== index} key={index} />;
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={sequenceData.assignments[name] !== index} key={index} />;
           })}
         </>
       ) : (

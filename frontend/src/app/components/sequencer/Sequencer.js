@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useCallback} from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import "./Sequencer.scss";
 
 import * as Tone from "tone";
@@ -8,7 +8,7 @@ const default_sampler = new Tone.Sampler({
   urls: {
     A1: "A1.mp3",
   },
-  baseUrl: "https://tonejs.github.io/audio/casio/"
+  baseUrl: "https://tonejs.github.io/audio/casio/",
 }).toDestination();
 
 // Function which creates a 5xn grid,
@@ -30,9 +30,13 @@ const NoteButton = ({ note, isActive, ...rest }) => {
   );
 };
 
-function Sequencer({ sampler=default_sampler, cols=8, disabled=false }) {
-
-  const [grid, setGrid] = useState(GenerateGrid(cols));
+function Sequencer({
+  sampler = default_sampler,
+  cols = 8,
+  disabled = false,
+  inputGrid,
+}) {
+  const [grid, setGrid] = useState(inputGrid);
   const [isPlaying, setIsPlaying] = useState(false);
   const noteIndex = ["C", "D", "E", "G", "A"];
   const CHOSEN_OCTAVE = 1;
@@ -45,8 +49,7 @@ function Sequencer({ sampler=default_sampler, cols=8, disabled=false }) {
       column.map(
         // boolean value if note should be played from grid
         (shouldPlay, colIndex) =>
-          shouldPlay &&
-          columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
+          shouldPlay && columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
       );
       music.push(columnNotes);
     });
@@ -77,8 +80,7 @@ function Sequencer({ sampler=default_sampler, cols=8, disabled=false }) {
       column.map(
         // boolean value if note should be played from grid
         (shouldPlay, colIndex) =>
-          shouldPlay &&
-          columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
+          shouldPlay && columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
       );
       music.push(columnNotes);
     });
@@ -103,13 +105,17 @@ function Sequencer({ sampler=default_sampler, cols=8, disabled=false }) {
     let copy = [...grid];
     copy[row][col] = copy[row][col] ? false : true;
     setGrid(copy);
-  }
+  };
   return (
-    <div className={`sequencer ${disabled ? "sequencer_disabled": ""}`}>
+    <div className={`sequencer ${disabled ? "sequencer_disabled" : ""}`}>
       {grid.map((col, rowIndex) => (
         <div className="note-column">
           {col.map((isActive, colIndex) => (
-            <NoteButton note={noteIndex[colIndex]} isActive={grid[rowIndex][colIndex]} onClick={() => handleNoteClick(rowIndex, colIndex)}/>
+            <NoteButton
+              note={noteIndex[colIndex]}
+              isActive={grid[rowIndex][colIndex]}
+              onClick={() => handleNoteClick(rowIndex, colIndex)}
+            />
           ))}
         </div>
       ))}
