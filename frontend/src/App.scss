@@ -3,6 +3,19 @@
 .app {
   text-align: center;
   background-color: $dark-gray;
+  font-family: "Open Sans";
+
+  .button-wide {
+    width: 150px;
+    padding: 10px;
+    border-radius: 50px;
+    background-color: $highlight;
+    border: 0px;
+  }
+
+  .button-wide:hover {
+    background-color: $highlight-darker;
+  }
 }
 
 .note-column {

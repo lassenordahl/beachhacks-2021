@@ -2,46 +2,13 @@
 import React from "react";
 import "./App.scss";
 import "./globals/hack-styles.scss";
-import Sequencer from "./app/components/Sequencer.js";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Installed dependency imports
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 
 // Website imports for classes you made
-import { Card } from "./app/containers";
-
-function SampleCard() {
-  return (
-    <Card style={{ width: "30vw"}}>
-      <h1>
-        HackUCI Template
-      </h1>
-      <h4>Featuring our friends:</h4>
-      <p>
-        Create React App
-      </p>
-      <p>
-        SASS
-      </p>
-      <p>
-        React Router
-      </p>
-    </Card>
-  );
-}
-
-function OtherCard() {
-  return (
-    <Card style={{ width: "30vw"}}>
-      <h1>
-        Other Page!
-      </h1>
-      <p>
-        Howdy
-      </p>
-    </Card>
-  );
-}
+import { Landing, Sequence } from "./app/views";
 
 function App() {
   return (
@@ -50,11 +17,11 @@ function App() {
         <Switch>
           <Route 
             exact path={"/"}
-            component={Sequencer}
+            component={Landing}
           />
           <Route 
-            exact path={"/other"}
-            component={OtherCard}
+            exact path={"/sequence"}
+            component={Sequence}
           />
         </Switch>
       </Router>
