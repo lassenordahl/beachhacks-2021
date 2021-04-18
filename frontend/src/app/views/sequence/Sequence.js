@@ -3,6 +3,7 @@ import "./Sequence.scss";
 
 import { useLocation } from "react-router-dom";
 import { Sequencer } from "./../../../app/components";
+import * as Tone from "tone";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -13,6 +14,7 @@ let colAmount = 20;
 function Sequence() {
   const [sequenceData, setSequenceData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   let query = useQuery();
   let name = query.get("name");
@@ -44,6 +46,23 @@ function Sequence() {
     setSequenceData();
   }
 
+  async function playMusic() {
+    // Starts our Tone context
+    await Tone.start();
+
+    if (isPlaying) {
+      // Turn of our player if music is currently playing
+      setIsPlaying(false);
+
+      await Tone.Transport.stop();
+
+      return;
+    }
+    setIsPlaying(true);
+    // Toggles playback of our musical masterpiece
+    await Tone.Transport.start();
+  };
+
   return (
     <div className="sequence">
       {!loading && sequenceData != null ? (
@@ -56,6 +75,9 @@ function Sequence() {
       ) : (
         <p>Loading data</p>
       )}
+      <button className="play-button" onClick={() => PlayMusic()}>
+        {isPlaying ? "Stop" : "Play"}
+      </button>
     </div>
   );
 }
