@@ -16,6 +16,7 @@ function Sequence() {
   const [sequenceData, setSequenceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [color, setColor] = useState(0);
   
   const { getColor } = useRainbow(0, 100)
 
@@ -50,6 +51,31 @@ function Sequence() {
 
     // make an api call with updatedGrid
     // setSequenceData(currentUser);
+    setColor(getColorScore())
+  }
+
+  function getColorScore() {
+
+    if (sequenceData ===  null) {
+      return 0;
+    }
+    
+    let current = 0
+    let totalPossible = 3 * 5 * 20;
+
+    for (let i = 0; i < sequenceData.sequence_data.length; i++) {
+      let current_2d_array = sequenceData.sequence_data[i];
+
+      for (let x = 0; x < current_2d_array.length; x++) {
+        for (let y = 0; y < current_2d_array[x].length; y++) {
+          if (current_2d_array[x][y]) {
+            current += y
+          }
+        }
+      }
+    }
+
+    return (current * 3) / totalPossible * 100
   }
 
   async function playMusic() {
@@ -70,7 +96,7 @@ function Sequence() {
   };
 
   return (
-    <div className="sequence" style={{ backgroundColor: "#2e2e2e"}}>
+    <div className="sequence" style={{ backgroundColor: "#" + getColor(color)}}>
       {!loading && sequenceData != null ? (
         <>
           {" "}
