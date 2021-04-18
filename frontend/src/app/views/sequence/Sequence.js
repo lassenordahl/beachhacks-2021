@@ -3,6 +3,7 @@ import "./Sequence.scss";
 
 import { useLocation } from "react-router-dom";
 import { Sequencer } from "./../../../app/components";
+import { useRainbow } from "../../hooks"
 import * as Tone from "tone";
 
 function useQuery() {
@@ -22,14 +23,14 @@ const sampler2 = new Tone.Sampler({
   urls: {
     A1: "A1.mp3",
   },
-  baseUrl: "https://tonejs.github.io/audio/casio/",
+  baseUrl: "https://tonejs.github.io/audio/salamander/",
 }).toDestination();
 
 const sampler3 = new Tone.Sampler({
   urls: {
-    A1: "A1.mp3",
+    A1: "gong_1.mp3",
   },
-  baseUrl: "https://tonejs.github.io/audio/casio/",
+  baseUrl: "https://tonejs.github.io/audio/berklee/",
 }).toDestination();
 
 function Sequence() {
@@ -40,6 +41,8 @@ function Sequence() {
   const noteIndex = ["C", "D", "E", "G", "A"];
   const CHOSEN_OCTAVE = 1;
 
+  
+  const { getColor } = useRainbow(0, 100)
 
   let query = useQuery();
   let name = query.get("name");
@@ -105,8 +108,13 @@ function Sequence() {
     });
   }
 
-  function updateTotalSequence() {
-    setSequenceData();
+  function updateGrid(updatedGrid) {
+    let currentUser = sequenceData.assignments[name];
+    let sequence_copy = {...sequenceData};
+    sequence_copy['sequence_data'][currentUser] = updatedGrid;
+    setSequenceData(sequence_copy);
+    // make an api call with updatedGrid
+    // setSequenceData(currentUser);
   }
 
   async function playMusic() {
@@ -127,12 +135,14 @@ function Sequence() {
   };
 
   return (
-    <div className="sequence">
+    <div className="sequence" style={{ backgroundColor: "#2e2e2e"}}>
       {!loading && sequenceData != null ? (
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={sequenceData.assignments[name] !== index} key={index} />;
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid}/>;
+
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={sequenceData.assignments[name] !== index} key={index} updateGrid={updateGrid}/>;
           })}
         </>
       ) : (
