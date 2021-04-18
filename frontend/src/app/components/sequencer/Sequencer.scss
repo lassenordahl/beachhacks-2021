@@ -1,0 +1,33 @@
+@import "../../../globals/hack-variables.scss";
+
+.sequencer {
+
+  margin-bottom: 2rem;
+
+  .note--active {
+    background-color: $highlight;
+  }
+
+  .note--active-main {
+    background-color: $highlight-two;
+  }
+
+
+  .sequencer__note_block {
+    width: 36px;
+    height: 36px;
+    margin: 8px;
+    outline: 0;
+    border: 0;
+  }
+}
+
+.sequencer_disabled {
+  transform: scale(0.5);
+  margin-bottom: 0;
+
+  .sequencer__note_block {
+    cursor: default;
+    pointer-events: none;
+  }
+}

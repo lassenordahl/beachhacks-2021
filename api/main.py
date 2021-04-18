@@ -1,15 +1,43 @@
 from typing import Optional
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Body, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+import json
 
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="api/templates/static"), name="static")
 templates = Jinja2Templates(directory="api/templates")
+
+FILE_NAME = "data.json"
+INSTRUMENTS = [0, 1, 2]
+STEPS = 20
+NOTES = 5
+
+def startup_data_structures():
+    """
+    Initializes the shared sequence information that will be edited on collaboratively.
+    """
+    # Setup sequence data
+    sequence_data = []
+    for _ in INSTRUMENTS:
+        notes = []
+        for _ in range(STEPS):
+            notes.append([False for x in range(5)])
+        sequence_data.append(notes)
+    # Setup named assignments
+    assignments = {}
+
+    return {
+        "sequence_data": sequence_data,
+        "assignments": assignments
+    }
+
+with open(FILE_NAME,'w') as f:
+    json.dump(startup_data_structures(), f)
 
 # Allow CORS since that's the main way we'll be interacting with the API
 origins = ["*"]
@@ -22,10 +50,64 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def index(request: Request):
+def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+  
+
+@app.get("/sequence")
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+  
+  
+@app.get("/api/refresh/")
+def sequence():
+    with open(FILE_NAME, "w") as f:
+        json.dump(startup_data_structures(), f)
 
 
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Optional[str] = None):
-    return {"item_id": item_id, "q": q}
+@app.get("/api/sequence/")
+def sequence():
+    with open(FILE_NAME) as f:
+        return json.load(f)
+
+@app.get("/api/sequence/{name}")
+def sequence(name: str):
+    with open(FILE_NAME, "r+") as f:
+        data = json.load(f)
+        f.seek(0)
+        for instrument in INSTRUMENTS:
+            if instrument not in data["assignments"].values() and name not in data["assignments"]:
+                data["assignments"][name] = instrument
+                json.dump(data, f)
+                f.truncate()
+                break
+        return data
+
+@app.post("/api/update-sequence")
+def sequence(payload: dict = Body(...)):
+    if payload:
+        with open(FILE_NAME,'w') as f:
+            data = json.dump(payload, f)
+    return data
+
+@app.post("/api/update-sequence/{name}")
+def sequence(name: str, payload: list = Body(...)):
+    with open(FILE_NAME, "r+") as f:
+        data = json.load(f)
+        f.seek(0)
+        instrument = data["assignments"][name]
+        data["sequence_data"][instrument] = payload
+        json.dump(data, f)
+        f.truncate()
+        return data
+
+@app.post("/api/leave/{name}")
+def leave(name: str):
+    with open(FILE_NAME, "r+") as f:
+        data = json.load(f)
+        f.seek(0)
+        if name in data["assignments"]:
+            del data["assignments"][name]
+        json.dump(data, f)
+        f.truncate()
+        return data
