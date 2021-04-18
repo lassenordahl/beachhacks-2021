@@ -6,6 +6,13 @@ import { Sequencer } from "./../../../app/components";
 import { useRainbow } from "../../hooks"
 import * as Tone from "tone";
 
+// sound samples
+import hihatFile1 from "../../samples/drums/hihat1.wav"
+import hihatFile2 from "../../samples/drums/hihat2.wav"
+import kickFile from "../../samples/drums/kick.wav"
+import snareFile from "../../samples/drums/snare.wav"
+import shakerFile from "../../samples/drums/shaker1.wav"
+
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
@@ -26,11 +33,15 @@ const sampler2 = new Tone.Sampler({
   baseUrl: "https://tonejs.github.io/audio/salamander/",
 }).toDestination();
 
-const sampler3 = new Tone.Sampler({
+const sampler3 = new Tone.Players({
   urls: {
-    A1: "gong_1.mp3",
+    'C1':hihatFile1,
+    'D1':hihatFile2,
+    'E1':kickFile,
+    'G1':snareFile,
+    'A1': shakerFile
   },
-  baseUrl: "https://tonejs.github.io/audio/berklee/",
+  baseUrl: "",
 }).toDestination();
 
 function Sequence() {
@@ -87,7 +98,14 @@ function Sequence() {
 
         //Sends the active note to our Sampler
         tracks.map((music, trackIndex) => {
-          samplers[trackIndex].triggerAttackRelease(music[column], "8n", time);
+          if(trackIndex === 2) {
+            // if(music[column].length > 0)
+              music[column].map((note) => {
+                samplers[trackIndex].player(note).start(time, 0,"8n");
+              })
+          } else {
+            samplers[trackIndex].triggerAttackRelease(music[column], "8n", time);
+          }
         })
       },
       [...Array(colAmount).keys()],
