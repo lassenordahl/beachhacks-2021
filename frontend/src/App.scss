@@ -5,3 +5,28 @@
   background-color: $dark-gray;
 }
 
+.note-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.sequencer {
+  display: flex;
+  flex-direction: row;
+}
+
+.note {
+  height: 80px;
+  width: 40px;
+  background: white;
+  border: 2px solid #ccc;
+  border-radius: 2px;
+  margin: 2px;
+  cursor: pointer;
+}
+.note--active {
+  background: grey;
+}
+.note:active {
+  background: lightgrey;
+}
