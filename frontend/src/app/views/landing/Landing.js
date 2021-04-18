@@ -21,7 +21,7 @@ function Landing() {
 
       document.addEventListener('visibilitychange', function logData() {
         if (document.visibilityState === 'hidden') {
-          navigator.sendBeacon(process.env.API_URL + `/leave/${name}`, null);
+          navigator.sendBeacon(process.env.API_URL + `/api/leave/${name}`, null);
         }
       });
 

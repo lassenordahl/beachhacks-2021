@@ -48,6 +48,9 @@ function Sequencer({
     updateGrid(copy)
   };
 
+  useEffect(() => {
+    setGrid(inputGrid);
+  }, [inputGrid]);
 
   return (
     <div className={`sequencer ${disabled ? "sequencer_disabled" : ""}`}>

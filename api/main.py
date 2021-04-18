@@ -15,7 +15,7 @@ templates = Jinja2Templates(directory="api/templates")
 FILE_NAME = "data.json"
 INSTRUMENTS = [0, 1, 2]
 STEPS = 20
-
+NOTES = 5
 
 def startup_data_structures():
     """
@@ -26,7 +26,7 @@ def startup_data_structures():
     for _ in INSTRUMENTS:
         notes = []
         for _ in range(STEPS):
-            notes.append(0)
+            notes.append([False for x in range(5)])
         sequence_data.append(notes)
     # Setup named assignments
     assignments = {}
@@ -52,34 +52,45 @@ app.add_middleware(
 @app.get("/")
 def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
+  
+
+@app.get("/sequence")
+def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+  
+  
+@app.get("/api/refresh/")
+def sequence():
+    with open(FILE_NAME, "w") as f:
+        json.dump(startup_data_structures(), f)
 
 
-@app.get("/sequence/")
+@app.get("/api/sequence/")
 def sequence():
     with open(FILE_NAME) as f:
         return json.load(f)
 
-@app.get("/sequence/{name}")
+@app.get("/api/sequence/{name}")
 def sequence(name: str):
     with open(FILE_NAME, "r+") as f:
         data = json.load(f)
         f.seek(0)
         for instrument in INSTRUMENTS:
-            if instrument not in data["assignments"].values():
+            if instrument not in data["assignments"].values() and name not in data["assignments"]:
                 data["assignments"][name] = instrument
                 json.dump(data, f)
                 f.truncate()
                 break
         return data
 
-@app.post("/update-sequence")
+@app.post("/api/update-sequence")
 def sequence(payload: dict = Body(...)):
     if payload:
         with open(FILE_NAME,'w') as f:
             data = json.dump(payload, f)
     return data
 
-@app.post("/update-sequence/{name}")
+@app.post("/api/update-sequence/{name}")
 def sequence(name: str, payload: list = Body(...)):
     with open(FILE_NAME, "r+") as f:
         data = json.load(f)
@@ -90,7 +101,7 @@ def sequence(name: str, payload: list = Body(...)):
         f.truncate()
         return data
 
-@app.post("/leave/{name}")
+@app.post("/api/leave/{name}")
 def leave(name: str):
     with open(FILE_NAME, "r+") as f:
         data = json.load(f)

@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Sequencer } from "./../../../app/components";
 import { useRainbow } from "../../hooks"
 import * as Tone from "tone";
+import axios from "axios";
 
 // sound samples
 import hihatFile1 from "../../samples/drums/hihat1.wav"
@@ -64,8 +65,13 @@ function Sequence() {
   useEffect(() => {
     if (query.get("name") !== null) {
       loadSequenceData(query.get("name"));
+      playMusic();
     }
   }, []);
+
+  useEffect(() => {
+    console.log(sequenceData)
+  }, [sequenceData]);
 
   useEffect(() => {
     setLoading(false);
@@ -116,20 +122,24 @@ function Sequence() {
     }
   }, [sequenceData]);
 
-  function loadSequenceData() {
-    setSequenceData({
-      sequence_data: [
-        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)), 
-        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)), 
-        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false))
-      ],
-      assignments: {
-        bernie: 0,
-      },
-    });
+  async function loadSequenceData() {
+    
+    let response = await axios.get(`${process.env.REACT_APP_API_URL}/api/sequence/${name}`)
+    // let response = await axios.get(`${process.env.REACT_APP_API_URL}/sequence`)
+
+    console.log(response.data);
+
+    if (response.status == 200) {
+      setSequenceData(response.data)
+    }
   }
 
-  function updateGrid(updatedGrid) {
+  async function updateGrid(updatedGrid) {
+
+    let response = await axios.post(`${process.env.REACT_APP_API_URL}/api/update-sequence/${name}`, updatedGrid);
+  
+    console.log(response);
+
     // this function currently will update the first sequence to whatever the last edit was, 
     // bc the updated grid will be from a diff sequence and we use a static current user.
     // should be fine in the final when those are disabled 
@@ -137,8 +147,6 @@ function Sequence() {
     let sequence_copy = {...sequenceData};
     sequence_copy['sequence_data'][currentUser] = updatedGrid;
     setSequenceData(sequence_copy);
-    // make an api call with updatedGrid
-    // setSequenceData(currentUser);
     setColor(getColorScore())
   }
 
@@ -184,6 +192,7 @@ function Sequence() {
       let loop = new Tone.Loop((time) => {
         // callback for end of loop goes  here
         console.log("end of loop");
+        loadSequenceData();
       }, (gain.toSeconds("8n") * colAmount)).start(0);
       setEOL(loop);
     }
@@ -198,7 +207,7 @@ function Sequence() {
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
+            // return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
 
             return <Sequencer 
               cols={colAmount} 
@@ -213,9 +222,9 @@ function Sequence() {
       ) : (
         <p>Loading data</p>
       )}
-      <button className="play-button" onClick={() => playMusic()}>
+      {/* <button className="play-button" onClick={() => playMusic()}>
         {isPlaying ? "Stop" : "Play"}
-      </button>
+      </button> */}
     </div>
   );
 }
