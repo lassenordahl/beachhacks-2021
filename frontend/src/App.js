@@ -1,14 +1,14 @@
 // React and CSS Imports
 import React from "react";
 import "./App.scss";
-import "globals/hack-styles.scss";
+import "./globals/hack-styles.scss";
 import Sequencer from "./app/components/Sequencer.js";
 
 // Installed dependency imports
 import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 
 // Website imports for classes you made
-import { Card } from "app/containers";
+import { Card } from "./app/containers";
 
 function SampleCard() {
   return (
