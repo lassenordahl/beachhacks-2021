@@ -17,6 +17,14 @@ function Landing() {
 
   function handleButtonAction() {
     if (showNameInput && name !== null) {
+      // Set listerner to remove this dude after leaving
+
+      document.addEventListener('visibilitychange', function logData() {
+        if (document.visibilityState === 'hidden') {
+          navigator.sendBeacon(process.env.API_URL + `/leave/${name}`, null);
+        }
+      });
+
       loadApp();
     } else {
       setNameInput(true);

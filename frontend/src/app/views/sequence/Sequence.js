@@ -41,6 +41,7 @@ function Sequence() {
   const noteIndex = ["C", "D", "E", "G", "A"];
   const CHOSEN_OCTAVE = 1;
 
+  const [color, setColor] = useState(0);
   
   const { getColor } = useRainbow(0, 100)
 
@@ -60,7 +61,6 @@ function Sequence() {
     let tracks = [];
     sequenceData['sequence_data'].map((grid, gridIndex) => {
       let music = [];
-
       grid.map((column) => {
         let columnNotes = [];
         column.map(
@@ -70,7 +70,7 @@ function Sequence() {
         );
         music.push(columnNotes);
       });
-
+      console.log(gridIndex, music)
       tracks.push(music);
     })
     console.log(tracks);
@@ -109,12 +109,40 @@ function Sequence() {
   }
 
   function updateGrid(updatedGrid) {
+    // this function currently will update the first sequence to whatever the last edit was, 
+    // bc the updated grid will be from a diff sequence and we use a static current user.
+    // should be fine in the final when those are disabled 
     let currentUser = sequenceData.assignments[name];
     let sequence_copy = {...sequenceData};
     sequence_copy['sequence_data'][currentUser] = updatedGrid;
     setSequenceData(sequence_copy);
     // make an api call with updatedGrid
     // setSequenceData(currentUser);
+    setColor(getColorScore())
+  }
+
+  function getColorScore() {
+
+    if (sequenceData ===  null) {
+      return 0;
+    }
+    
+    let current = 0
+    let totalPossible = 3 * 5 * 20;
+
+    for (let i = 0; i < sequenceData.sequence_data.length; i++) {
+      let current_2d_array = sequenceData.sequence_data[i];
+
+      for (let x = 0; x < current_2d_array.length; x++) {
+        for (let y = 0; y < current_2d_array[x].length; y++) {
+          if (current_2d_array[x][y]) {
+            current += y
+          }
+        }
+      }
+    }
+
+    return (current * 3) / totalPossible * 100
   }
 
   async function playMusic() {
@@ -135,7 +163,7 @@ function Sequence() {
   };
 
   return (
-    <div className="sequence" style={{ backgroundColor: "#2e2e2e"}}>
+    <div className="sequence" style={{ backgroundColor: "#" + getColor(color)}}>
       {!loading && sequenceData != null ? (
         <>
           {" "}
