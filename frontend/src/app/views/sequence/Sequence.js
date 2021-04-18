@@ -55,7 +55,7 @@ function Sequence() {
   const CHOSEN_OCTAVE = 1;
 
   const [color, setColor] = useState(0);
-  
+
   const { getColor } = useRainbow(0, 100)
 
   let query = useQuery();
@@ -69,58 +69,58 @@ function Sequence() {
 
   useEffect(() => {
     setLoading(false);
-    if(sequenceData) {
+    if (sequenceData) {
       // hold individual music lists for each track/sequencer
-    let tracks = [];
-    sequenceData['sequence_data'].map((grid, gridIndex) => {
-      let music = [];
-      grid.map((column) => {
-        let columnNotes = [];
-        column.map(
-          // boolean value if note should be played from grid
-          (shouldPlay, colIndex) =>
-            shouldPlay && columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
-        );
-        music.push(columnNotes);
-      });
-      //console.log(gridIndex, music)
-      tracks.push(music);
-    })
-    //console.log(tracks);
-    // Tone.Sequence()
-    //@param callback
-    //@param "events" to send with callback
-    //@param subdivision  to engage callback
-    let loop = new Tone.Sequence(
-      (time, column) => {
-        // Highlight column with styling
-        setCurrCol(column);
+      let tracks = [];
+      sequenceData['sequence_data'].map((grid, gridIndex) => {
+        let music = [];
+        grid.map((column) => {
+          let columnNotes = [];
+          column.map(
+            // boolean value if note should be played from grid
+            (shouldPlay, colIndex) =>
+              shouldPlay && columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
+          );
+          music.push(columnNotes);
+        });
+        //console.log(gridIndex, music)
+        tracks.push(music);
+      })
+      //console.log(tracks);
+      // Tone.Sequence()
+      //@param callback
+      //@param "events" to send with callback
+      //@param subdivision  to engage callback
+      let loop = new Tone.Sequence(
+        (time, column) => {
+          // Highlight column with styling
+          setCurrCol(column);
 
-        //Sends the active note to our Sampler
-        tracks.map((music, trackIndex) => {
-          if(trackIndex === 2) {
-            // if(music[column].length > 0)
-            music[column].map((note) => {
-              samplers[trackIndex].player(note).start(time, 0,"8n");
-            })
-          } else {
-            samplers[trackIndex].triggerAttackRelease(music[column], "8n", time);
-          }
-        })
-      },
-      [...Array(colAmount).keys()],
-      "8n"
-    ).start(0);
-    // cleanup function to dispose old sequence if there are updates
-    return () => loop.dispose();
+          //Sends the active note to our Sampler
+          tracks.map((music, trackIndex) => {
+            if (trackIndex === 2) {
+              // if(music[column].length > 0)
+              music[column].map((note) => {
+                samplers[trackIndex].player(note).start(time, 0, "8n");
+              })
+            } else {
+              samplers[trackIndex].triggerAttackRelease(music[column], "8n", time);
+            }
+          })
+        },
+        [...Array(colAmount).keys()],
+        "8n"
+      ).start(0);
+      // cleanup function to dispose old sequence if there are updates
+      return () => loop.dispose();
     }
   }, [sequenceData]);
 
   function loadSequenceData() {
     setSequenceData({
       sequence_data: [
-        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)), 
-        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)), 
+        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)),
+        [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false)),
         [...Array(20).keys()].map((x) => [...Array(5).keys()].map(() => false))
       ],
       assignments: {
@@ -134,7 +134,7 @@ function Sequence() {
     // bc the updated grid will be from a diff sequence and we use a static current user.
     // should be fine in the final when those are disabled 
     let currentUser = sequenceData.assignments[name];
-    let sequence_copy = {...sequenceData};
+    let sequence_copy = { ...sequenceData };
     sequence_copy['sequence_data'][currentUser] = updatedGrid;
     setSequenceData(sequence_copy);
     // make an api call with updatedGrid
@@ -144,10 +144,10 @@ function Sequence() {
 
   function getColorScore() {
 
-    if (sequenceData ===  null) {
+    if (sequenceData === null) {
       return 0;
     }
-    
+
     let current = 0
     let totalPossible = 3 * 5 * 20;
 
@@ -179,7 +179,7 @@ function Sequence() {
       return;
     }
 
-    if(!endOfLoop) {
+    if (!endOfLoop) {
       let gain = new Tone.Gain();// ned this to get the toSeconds function to get accurate times
       let loop = new Tone.Loop((time) => {
         // callback for end of loop goes  here
@@ -192,21 +192,31 @@ function Sequence() {
     await Tone.Transport.start();
   };
 
+  function getNameFromIndex(index) {
+    for (const [key, value] of Object.entries(sequenceData.assignments)) {
+      if (value === index) {
+        return key
+      }
+    }
+    return "Empty"
+  }
+
   return (
-    <div className="sequence" style={{ backgroundColor: "#" + getColor(color)}}>
+    <div className="sequence" style={{ backgroundColor: "#" + getColor(color) }}>
       {!loading && sequenceData != null ? (
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} name={getNameFromIndex()} updateGrid={updateGrid} currentCol={currentCol} />;
 
-            return <Sequencer 
-              cols={colAmount} 
-              inputGrid={data} 
-              disabled={sequenceData.assignments[name] !== index} 
-              key={index} 
+            return <Sequencer
+              cols={colAmount}
+              inputGrid={data}
+              disabled={sequenceData.assignments[name] !== index}
+              key={index}
+              name={getNameFromIndex()}
               updateGrid={updateGrid}
-              currentCol={currentCol} 
+              currentCol={currentCol}
             />;
           })}
         </>
