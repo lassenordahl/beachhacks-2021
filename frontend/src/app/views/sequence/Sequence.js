@@ -37,6 +37,8 @@ function Sequence() {
   const [sequenceData, setSequenceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [currentCol, setCurrCol] = useState(null);
+  const [endOfLoop, setEOL] = useState(null);
   const samplers = [sampler1, sampler2, sampler3];
   const noteIndex = ["C", "D", "E", "G", "A"];
   const CHOSEN_OCTAVE = 1;
@@ -70,10 +72,10 @@ function Sequence() {
         );
         music.push(columnNotes);
       });
-      console.log(gridIndex, music)
+      //console.log(gridIndex, music)
       tracks.push(music);
     })
-    console.log(tracks);
+    //console.log(tracks);
     // Tone.Sequence()
     //@param callback
     //@param "events" to send with callback
@@ -81,7 +83,7 @@ function Sequence() {
     let loop = new Tone.Sequence(
       (time, column) => {
         // Highlight column with styling
-        //setCurrentColumn(column);
+        setCurrCol(column);
 
         //Sends the active note to our Sampler
         tracks.map((music, trackIndex) => {
@@ -91,6 +93,7 @@ function Sequence() {
       [...Array(colAmount).keys()],
       "8n"
     ).start(0);
+    // cleanup function to dispose old sequence if there are updates
     return () => loop.dispose();
     }
   }, [sequenceData]);
@@ -157,6 +160,15 @@ function Sequence() {
 
       return;
     }
+
+    if(!endOfLoop) {
+      let gain = new Tone.Gain();// ned this to get the toSeconds function to get accurate times
+      let loop = new Tone.Loop((time) => {
+        // callback for end of loop goes  here
+        console.log("end of loop");
+      }, (gain.toSeconds("8n") * colAmount)).start(0);
+      setEOL(loop);
+    }
     setIsPlaying(true);
     // Toggles playback of our musical masterpiece
     await Tone.Transport.start();
@@ -168,7 +180,7 @@ function Sequence() {
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid}/>;
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
 
             return <Sequencer cols={colAmount} inputGrid={data} disabled={sequenceData.assignments[name] !== index} key={index} updateGrid={updateGrid}/>;
           })}
