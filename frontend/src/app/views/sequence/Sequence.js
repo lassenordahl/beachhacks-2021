@@ -18,6 +18,7 @@ function useQuery() {
 }
 
 let colAmount = 20;
+const CHOSEN_OCTAVE = 2;
 
 const sampler1 = new Tone.Sampler({
   urls: {
@@ -35,11 +36,11 @@ const sampler2 = new Tone.Sampler({
 
 const sampler3 = new Tone.Players({
   urls: {
-    'C1': hihatFile1,
-    'D1': hihatFile2,
-    'E1': kickFile,
-    'G1': snareFile,
-    'A1': shakerFile
+    [`C${CHOSEN_OCTAVE}`]: hihatFile1,
+    [`D${CHOSEN_OCTAVE}`]: hihatFile2,
+    [`E${CHOSEN_OCTAVE}`]: kickFile,
+    [`G${CHOSEN_OCTAVE}`]: snareFile,
+    [`A${CHOSEN_OCTAVE}`]: shakerFile
   },
   baseUrl: "",
 }).toDestination();
@@ -52,7 +53,6 @@ function Sequence() {
   const [endOfLoop, setEOL] = useState(null);
   const samplers = [sampler1, sampler2, sampler3];
   const noteIndex = ["C", "D", "E", "G", "A"];
-  const CHOSEN_OCTAVE = 1;
 
   const [color, setColor] = useState(0);
   
