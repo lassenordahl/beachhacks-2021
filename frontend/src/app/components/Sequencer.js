@@ -1,5 +1,6 @@
-import React, {useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import * as Tone from "tone";
+import { Loop } from "tone";
 
 const default_sampler = new Tone.Sampler({
   urls: {
@@ -30,12 +31,40 @@ const NoteButton = ({ note, isActive, ...rest }) => {
 export default function Sequencer({sampler=default_sampler, cols=8}) {
   const [grid, setGrid] = useState(GenerateGrid(cols));
   const [isPlaying, setIsPlaying] = useState(false);
-  const noteIndex = {0: "C", 1: "D", 2: "E", 3: "G", 4: "A"};
+  const noteIndex = ["C", "D", "E", "G", "A"];
   const CHOSEN_OCTAVE = 1;
 
-  function playNote(note) {
-    sampler.triggerAttackRelease(`${note}1`, "8n");
-  }
+  useEffect(() => {
+    let music = [];
+
+    grid.map((column) => {
+      let columnNotes = [];
+      column.map(
+        // boolean value if note should be played from grid
+        (shouldPlay, colIndex) =>
+          shouldPlay &&
+          columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
+      );
+      music.push(columnNotes);
+    });
+    // Tone.Sequence()
+    //@param callback
+    //@param "events" to send with callback
+    //@param subdivision  to engage callback
+    let loop = new Tone.Sequence(
+      (time, column) => {
+        // Highlight column with styling
+        //setCurrentColumn(column);
+
+        //Sends the active note to our Sampler
+        sampler.triggerAttackRelease(music[column], "8n", time);
+      },
+      [0, 1, 2, 3, 4, 5, 6, 7],
+      "8n"
+    ).start(0);
+    return () => loop.dispose();
+  }, [grid]);
+
   const PlayMusic = async () => {
     // Variable for storing our note in a appropriate format for our synth
     let music = [];
@@ -54,37 +83,16 @@ export default function Sequencer({sampler=default_sampler, cols=8}) {
     // Starts our Tone context
     await Tone.start();
 
-    // Tone.Sequence()
-    //@param callback
-    //@param "events" to send with callback
-    //@param subdivision  to engage callback
-    const Sequencer = new Tone.Sequence(
-      (time, column) => {
-        // Highlight column with styling
-        //setCurrentColumn(column);
-
-        //Sends the active note to our Sampler
-        sampler.triggerAttackRelease(music[column], "8n", time);
-      },
-      [0, 1, 2, 3, 4, 5, 6, 7],
-      "8n"
-    );
-
     if (isPlaying) {
       // Turn of our player if music is currently playing
       setIsPlaying(false);
-      //setCurrentColumn(null);
 
       await Tone.Transport.stop();
-      await Sequencer.stop();
-      await Sequencer.clear();
-      await Sequencer.dispose();
 
       return;
     }
     setIsPlaying(true);
     // Toggles playback of our musical masterpiece
-    await Sequencer.start();
     await Tone.Transport.start();
   };
 
