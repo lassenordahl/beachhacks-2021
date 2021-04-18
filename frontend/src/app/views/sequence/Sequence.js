@@ -75,7 +75,7 @@ function Sequence() {
       ) : (
         <p>Loading data</p>
       )}
-      <button className="play-button" onClick={() => PlayMusic()}>
+      <button className="play-button" onClick={() => playMusic()}>
         {isPlaying ? "Stop" : "Play"}
       </button>
     </div>
