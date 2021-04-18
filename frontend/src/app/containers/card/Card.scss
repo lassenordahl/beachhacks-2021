@@ -1,0 +1,9 @@
+@import "globals/hack-variables.scss";
+
+.card {
+  background-color: $white;
+  
+  & > div {
+    margin: $medium-spacing;
+  }
+}
