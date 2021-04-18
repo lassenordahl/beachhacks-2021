@@ -198,7 +198,7 @@ function Sequence() {
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            // return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
 
             return <Sequencer 
               cols={colAmount} 
