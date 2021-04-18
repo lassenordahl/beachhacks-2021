@@ -5,8 +5,13 @@
   margin-bottom: 2rem;
 
   .note--active {
-    background-color: black;
+    background-color: $highlight;
   }
+
+  .note--active-main {
+    background-color: $highlight-two;
+  }
+
 
   .sequencer__note_block {
     width: 36px;

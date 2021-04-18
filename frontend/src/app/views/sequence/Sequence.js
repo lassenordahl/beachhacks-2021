@@ -124,7 +124,7 @@ function Sequence() {
 
   async function loadSequenceData() {
     
-    let response = await axios.get(`${process.env.REACT_APP_API_URL}/api/sequence/${name}`)
+    let response = await axios.get(`http://localhost:8000/api/sequence/${name}`)
     // let response = await axios.get(`${process.env.REACT_APP_API_URL}/sequence`)
 
     console.log(response.data);
@@ -136,7 +136,8 @@ function Sequence() {
 
   async function updateGrid(updatedGrid) {
 
-    let response = await axios.post(`${process.env.REACT_APP_API_URL}/api/update-sequence/${name}`, updatedGrid);
+    let response = await axios.post(`http://localhost:8000/api/update-sequence/${name}`, updatedGrid);
+    // let response = await axios.post(`${process.env.REACT_APP_API_URL}/api/update-sequence/${name}`, updatedGrid);
   
     console.log(response);
 
@@ -203,26 +204,26 @@ function Sequence() {
 
   function getNameFromIndex(index) {
     for (const [key, value] of Object.entries(sequenceData.assignments)) {
+      console.log(key,value, index);
       if (value === index) {
-        return key
+        return key;
       }
     }
-    return "Empty"
+    return ""
   }
 
   return (
-    <div className="sequence" style={{ backgroundColor: "#" + getColor(color) }}>
+    <div className="sequence">
       {!loading && sequenceData != null ? (
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            // return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
-
-            return <Sequencer 
-              cols={colAmount} 
-              inputGrid={data} 
-              disabled={sequenceData.assignments[name] !== index} 
-              key={index} 
+            return <Sequencer
+              cols={colAmount}
+              inputGrid={data}
+              disabled={sequenceData.assignments[name] !== index}
+              key={index}
+              name={getNameFromIndex(index)}
               updateGrid={updateGrid}
               currentCol={currentCol}
             />;

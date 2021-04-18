@@ -20,8 +20,8 @@ function GenerateGrid(n) {
   return grid;
 }
 
-const NoteButton = ({ note, isActive, ...rest }) => {
-  const class_used = isActive ? "note note--active" : "note";
+const NoteButton = ({ note, disabled, isActive, ...rest }) => {
+  const class_used = isActive ? `note ${disabled ? "note--active": "note--active-main"}` : "note";
   return (
     <button className={`${class_used} sequencer__note_block`} {...rest}>
       {/* {note} */}
@@ -55,13 +55,14 @@ function Sequencer({
 
   return (
     <div className={`sequencer ${disabled ? "sequencer_disabled" : ""}`}>
-      <div>{name}</div>
+      <div style={{ fontFamily: "Open Sans", fontWeight: "700", "fontStyle": "italic", margin: "2rem",  fontSize: "2rem"}}>{name}</div>
       {grid.map((col, rowIndex) => (
         <div className={currentCol === rowIndex ? "note-column note-column--active" : "note-column"}>
           {col.map((isActive, colIndex) => (
             <NoteButton
               note={noteIndex[colIndex]}
               isActive={grid[rowIndex][colIndex]}
+              disabled={disabled}
               onClick={() => handleNoteClick(rowIndex, colIndex)}
             />
           ))}
