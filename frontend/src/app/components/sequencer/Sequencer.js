@@ -35,7 +35,8 @@ function Sequencer({
   disabled = false,
   inputGrid,
   updateGrid,
-  currentCol
+  currentCol,
+  name
 }) {
   const [grid, setGrid] = useState(inputGrid);
   const noteIndex = ["C", "D", "E", "G", "A"];
@@ -54,6 +55,7 @@ function Sequencer({
 
   return (
     <div className={`sequencer ${disabled ? "sequencer_disabled" : ""}`}>
+      <div>{name}</div>
       {grid.map((col, rowIndex) => (
         <div className={currentCol === rowIndex ? "note-column note-column--active" : "note-column"}>
           {col.map((isActive, colIndex) => (
