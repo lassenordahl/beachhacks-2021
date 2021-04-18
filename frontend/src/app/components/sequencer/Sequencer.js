@@ -1,4 +1,6 @@
 import React, {useEffect, useState, useCallback} from "react";
+import "./Sequencer.scss";
+
 import * as Tone from "tone";
 import { Loop } from "tone";
 
@@ -22,8 +24,8 @@ function GenerateGrid(n) {
 const NoteButton = ({ note, isActive, ...rest }) => {
   const class_used = isActive ? "note note--active" : "note";
   return (
-    <button className={class_used} {...rest}>
-      {note}
+    <button className={`${class_used} sequencer__note_block`} {...rest}>
+      {/* {note} */}
     </button>
   );
 };
@@ -59,7 +61,7 @@ export default function Sequencer({sampler=default_sampler, cols=8}) {
         //Sends the active note to our Sampler
         sampler.triggerAttackRelease(music[column], "8n", time);
       },
-      [0, 1, 2, 3, 4, 5, 6, 7],
+      [...Array(cols).keys()],
       "8n"
     ).start(0);
     return () => loop.dispose();

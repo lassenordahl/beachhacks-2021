@@ -1,0 +1,13 @@
+@import "../../../globals/hack-variables.scss";
+
+.sequencer {
+  
+
+  .sequencer__note_block {
+    width: 36px;
+    height: 36px;
+    margin: 6px;
+    outline: 0;
+    border: 0;
+  }
+}

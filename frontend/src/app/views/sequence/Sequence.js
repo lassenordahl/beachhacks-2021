@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./Sequence.scss";
 
 import { useLocation } from "react-router-dom";
+import { Sequencer } from "./../../../app/components";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -62,7 +63,7 @@ function Sequence() {
 
   return (
     <div className="sequence">
-      
+      <Sequencer cols={12}/>
     </div>
   );
 }
