@@ -216,7 +216,6 @@ function Sequence() {
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-<<<<<<< HEAD
             // return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid} currentCol={currentCol}/>;
 
             return <Sequencer 
@@ -224,16 +223,6 @@ function Sequence() {
               inputGrid={data} 
               disabled={sequenceData.assignments[name] !== index} 
               key={index} 
-=======
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} name={getNameFromIndex()} updateGrid={updateGrid} currentCol={currentCol} />;
-
-            return <Sequencer
-              cols={colAmount}
-              inputGrid={data}
-              disabled={sequenceData.assignments[name] !== index}
-              key={index}
-              name={getNameFromIndex()}
->>>>>>> dd0de9654fb275779b735105a5e3000a4ee1cdef
               updateGrid={updateGrid}
               currentCol={currentCol}
             />;
