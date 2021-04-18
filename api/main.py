@@ -13,6 +13,9 @@ app.mount("/static", StaticFiles(directory="api/templates/static"), name="static
 templates = Jinja2Templates(directory="api/templates")
 
 FILE_NAME = "data.json"
+INSTRUMENTS = [0, 1, 2]
+STEPS = 8
+
 
 def startup_data_structures():
     """
@@ -20,11 +23,9 @@ def startup_data_structures():
     """
     # Setup sequence data
     sequence_data = []
-    instruments = 3
-    steps = 8
-    for _ in range(instruments):
+    for _ in INSTRUMENTS:
         notes = []
-        for _ in range(steps):
+        for _ in range(STEPS):
             notes.append(0)
         sequence_data.append(notes)
     # Setup named assignments
@@ -53,10 +54,23 @@ def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
-@app.get("/sequence/{name}")
+@app.get("/sequence/")
 def sequence():
     with open(FILE_NAME) as f:
         return json.load(f)
+
+@app.get("/sequence/{name}")
+def sequence(name: str):
+    with open(FILE_NAME, "r+") as f:
+        data = json.load(f)
+        f.seek(0)
+        for instrument in INSTRUMENTS:
+            if instrument not in data["assignments"].values():
+                data["assignments"][name] = instrument
+                json.dump(data, f)
+                f.truncate()
+                break
+        return data
 
 @app.post("/update-sequence")
 def sequence(payload: dict = Body(...)):
