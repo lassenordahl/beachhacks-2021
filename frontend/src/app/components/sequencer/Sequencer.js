@@ -34,6 +34,7 @@ function Sequencer({
   cols = 8,
   disabled = false,
   inputGrid,
+  updateGrid
 }) {
   const [grid, setGrid] = useState(inputGrid);
   const noteIndex = ["C", "D", "E", "G", "A"];
@@ -73,7 +74,10 @@ function Sequencer({
     let copy = [...grid];
     copy[row][col] = copy[row][col] ? false : true;
     setGrid(copy);
+    updateGrid(copy)
   };
+
+
   return (
     <div className={`sequencer ${disabled ? "sequencer_disabled" : ""}`}>
       {grid.map((col, rowIndex) => (

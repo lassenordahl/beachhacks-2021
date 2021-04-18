@@ -3,6 +3,7 @@ import "./Sequence.scss";
 
 import { useLocation } from "react-router-dom";
 import { Sequencer } from "./../../../app/components";
+import { useRainbow } from "../../hooks"
 import * as Tone from "tone";
 
 function useQuery() {
@@ -15,6 +16,8 @@ function Sequence() {
   const [sequenceData, setSequenceData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isPlaying, setIsPlaying] = useState(false);
+  
+  const { getColor } = useRainbow(0, 100)
 
   let query = useQuery();
   let name = query.get("name");
@@ -42,8 +45,11 @@ function Sequence() {
     });
   }
 
-  function updateTotalSequence() {
-    setSequenceData();
+  function updateGrid(updatedGrid) {
+    let currentUser = sequenceData.assignments[name]
+
+    // make an api call with updatedGrid
+    // setSequenceData(currentUser);
   }
 
   async function playMusic() {
@@ -64,12 +70,14 @@ function Sequence() {
   };
 
   return (
-    <div className="sequence">
+    <div className="sequence" style={{ backgroundColor: "#2e2e2e"}}>
       {!loading && sequenceData != null ? (
         <>
           {" "}
           {sequenceData.sequence_data.map(function (data, index) {
-            return <Sequencer cols={colAmount} inputGrid={data} disabled={sequenceData.assignments[name] !== index} key={index} />;
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={false} key={index} updateGrid={updateGrid}/>;
+
+            return <Sequencer cols={colAmount} inputGrid={data} disabled={sequenceData.assignments[name] !== index} key={index} updateGrid={updateGrid}/>;
           })}
         </>
       ) : (
