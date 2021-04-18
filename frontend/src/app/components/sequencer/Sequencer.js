@@ -34,41 +34,12 @@ function Sequencer({
   cols = 8,
   disabled = false,
   inputGrid,
-  updateGrid
+  updateGrid,
+  currentCol
 }) {
   const [grid, setGrid] = useState(inputGrid);
   const noteIndex = ["C", "D", "E", "G", "A"];
   const CHOSEN_OCTAVE = 1;
-
-  useEffect(() => {
-    let music = [];
-
-    grid.map((column) => {
-      let columnNotes = [];
-      column.map(
-        // boolean value if note should be played from grid
-        (shouldPlay, colIndex) =>
-          shouldPlay && columnNotes.push(noteIndex[colIndex] + CHOSEN_OCTAVE)
-      );
-      music.push(columnNotes);
-    });
-    // Tone.Sequence()
-    //@param callback
-    //@param "events" to send with callback
-    //@param subdivision  to engage callback
-    let loop = new Tone.Sequence(
-      (time, column) => {
-        // Highlight column with styling
-        //setCurrentColumn(column);
-
-        //Sends the active note to our Sampler
-        sampler.triggerAttackRelease(music[column], "8n", time);
-      },
-      [...Array(cols).keys()],
-      "8n"
-    ).start(0);
-    return () => loop.dispose();
-  }, [grid]);
 
   const handleNoteClick = (row, col) => {
     let copy = [...grid];
@@ -81,7 +52,7 @@ function Sequencer({
   return (
     <div className={`sequencer ${disabled ? "sequencer_disabled" : ""}`}>
       {grid.map((col, rowIndex) => (
-        <div className="note-column">
+        <div className={currentCol === rowIndex ? "note-column note-column--active" : "note-column"}>
           {col.map((isActive, colIndex) => (
             <NoteButton
               note={noteIndex[colIndex]}
