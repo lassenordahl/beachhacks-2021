@@ -2,7 +2,7 @@
 
 ## Demo Video
 
-[![crowd sequence demo video](https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/001/488/788/datas/original.png){:width="250px"}](https://www.youtube.com/watch?v=EgPqaooFTtc)
+<a href="https://www.youtube.com/watch?v=EgPqaooFTtc"><img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/001/488/788/datas/original.png" width="250px"></a>
 
 ## Getting Started 
 
