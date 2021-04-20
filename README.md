@@ -2,7 +2,7 @@
 
 ## Demo Video
 
-<a href="https://www.youtube.com/watch?v=EgPqaooFTtc"><img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/001/488/788/datas/original.png" width="250px"></a>
+<a href="https://www.youtube.com/watch?v=EgPqaooFTtc"><img src="https://challengepost-s3-challengepost.netdna-ssl.com/photos/production/software_photos/001/488/788/datas/original.png" width="650pxpx"></a>
 
 ## Getting Started 
 
